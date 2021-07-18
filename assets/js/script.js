@@ -42,16 +42,43 @@ function initPage() {
                 currentUVEl.innerHTML = "UV Index: ";
                 currentUVEl.append(UVIndex);
             });
+//  Using saved city name, execute a 5-day forecast get request from open weather map api
+            let cityID = response.data.id;
+            let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&appid=" + APIKey;
+            axios.get(forecastQueryURL)
+            .then(function(response){
+//  Parse response to display forecast for next 5 days underneath current conditions
+                console.log(response);
+                const forecastEls = document.querySelectorAll(".forecast");
+                for (i=0; i<forecastEls.length; i++) {
+                    forecastEls[i].innerHTML = "";
+                    const forecastIndex = i*8 + 4;
+                    const forecastDate = new Date(response.data.list[forecastIndex].dt * 1000);
+                    const forecastDay = forecastDate.getDate();
+                    const forecastMonth = forecastDate.getMonth() + 1;
+                    const forecastYear = forecastDate.getFullYear();
+                    const forecastDateEl = document.createElement("p");
+                    forecastDateEl.setAttribute("class","mt-3 mb-0");
+                    forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+                    forecastEls[i].append(forecastDateEl);
+                    const forecastWeatherEl = document.createElement("img");
+                    forecastWeatherEl.setAttribute("src","https://openweathermap.org/img/wn/" + response.data.list[forecastIndex].weather[0].icon + "@2x.png");
+                    forecastWeatherEl.setAttribute("alt",response.data.list[forecastIndex].weather[0].description);
+                    forecastEls[i].append(forecastWeatherEl);
+                    const forecastTempEl = document.createElement("p");
+                    forecastTempEl.innerHTML = "Temp: " + k2f(response.data.list[forecastIndex].main.temp) + " &#176F";
+                    forecastEls[i].append(forecastTempEl);
+                    const forecastHumidityEl = document.createElement("p");
+                    forecastHumidityEl.innerHTML = "Humidity: " + response.data.list[forecastIndex].main.humidity + "%";
+                    forecastEls[i].append(forecastHumidityEl);
+                }
+            })        
         });
     })
 
     function k2f(K) {
         return Math.floor((K - 273.15) *1.8 +32);
     }
-
-
-//  Using saved city name, execute a 5-day forecast get request from open weather map api
-//  Parse response to display forecast for next 5 days underneath current conditions
 //  Save user's search requests and display them underneath search form
 //  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
 }
