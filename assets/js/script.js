@@ -1,6 +1,7 @@
-function initPage() {
+function weatherForecastPage() {
     const inputEl = document.getElementById("city-input");
     const searchEl = document.getElementById("search-button");
+    const clearEl = document.getElementById("clear-history");
     const nameEl = document.getElementById("city-name");
     const currentPicEl = document.getElementById("current-pic");
     const currentTempEl = document.getElementById("temperature");
@@ -13,11 +14,11 @@ function initPage() {
     
 
     const APIKey = "c9a9ed03a355403f4cb9a36e931c0b4a";
-//  When search button is clicked, read the city name typed by the user
 
+//  Search inputted city name in API when the search icon button is clicked
     function getWeather(cityName) {
-//  Using saved city name, execute a current condition get request from open weather map api
-        let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
+//  With the now-saved city name, do a current condition get request from open weather map api
+        let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APIKey}`;
         axios.get(queryURL)
         .then(function(response){
             console.log(response);
@@ -28,7 +29,7 @@ function initPage() {
             const day = currentDate.getDate();
             const month = currentDate.getMonth() + 1;
             const year = currentDate.getFullYear();
-            nameEl.innerHTML = response.data.name + " (" + month + "/" + day + "/" + year + ") ";
+            nameEl.innerHTML = response.data.name + ` • ${month}/${day}/${year}`;
             let weatherPic = response.data.weather[0].icon;
             currentPicEl.setAttribute("src","https://openweathermap.org/img/wn/" + weatherPic + "@2x.png");
             currentPicEl.setAttribute("alt",response.data.weather[0].description);
@@ -88,6 +89,11 @@ function initPage() {
         renderSearchHistory();
     })
 
+    clearEl.addEventListener("click",function() {
+        searchHistory = [];
+        renderSearchHistory();
+    })
+
     function k2f(K) {
         return Math.floor((K - 273.15) *1.8 +32);
     }
@@ -96,7 +102,7 @@ function initPage() {
         historyEl.innerHTML = "";
         for (let i=0; i<searchHistory.length; i++) {
             const historyItem = document.createElement("input");
-            // <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com"></input>
+            // <input type="text" readonly class="form-control d-block bg-white"></input>
             historyItem.setAttribute("type","text");
             historyItem.setAttribute("readonly",true);
             historyItem.setAttribute("class", "form-control d-block bg-white");
@@ -118,4 +124,4 @@ function initPage() {
 //  When page loads, automatically generate current conditions and 5-day forecast for the last city the user searched for
 
 }
-initPage();
+weatherForecastPage();
