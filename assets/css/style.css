@@ -1,0 +1,26 @@
+nav {
+    background: linear-gradient(90deg, rgba(255,252,3) 0%, rgba(255,146,3,1) 50%, rgba(255,252,3,1) 100%);252,3,1) 100%);
+}
+
+.navbar-brand {
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.search-header {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.city-name {
+    font-size: 30px;
+}
+
+.forecast-date {
+    font-size: 18px;
+}
